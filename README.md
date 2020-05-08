@@ -1,4 +1,4 @@
-# Timelock
+# TimeLock
 
 A time-lock encryption program, which relies on a verified time server source to prevent falsified decryption attempts.
 
@@ -10,7 +10,7 @@ Time-lock encryption is the concept of ciphertext or an encrypted file that cann
 * Ashish D'Souza - [computer-geek64](https://github.com/computer-geek64/)
 
 ## Releases
-Timelock is currently under production, and does not have any releases yet.
+TimeLock is currently under production, and does not have any releases yet.
 
 ## Versioning
 This project is uses the [Git](https://git-scm.com/) Version Control System (VCS).
