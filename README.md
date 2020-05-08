@@ -13,7 +13,7 @@ Time-lock encryption is the concept of ciphertext or an encrypted file that cann
 Timelock is currently under production, and does not have any releases yet.
 
 ## Versioning
-This project is uses the [https://git-scm.com/](Git) Version Control System (VCS).
+This project is uses the [Git](https://git-scm.com/) Version Control System (VCS).
 
 ## License
 This project is licensed under the [MIT License](LICENSE).
