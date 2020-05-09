@@ -7,7 +7,7 @@ import javax.persistence.Id;
 public class EncryptionInformation {
     @Id
     private String privateKey;
-    private Integer timestamp;
+    private Double timestamp;
     private String checksum;
 
     public String getPrivateKey() {
@@ -18,11 +18,11 @@ public class EncryptionInformation {
         this.privateKey = privateKey;
     }
 
-    public Integer getTimestamp() {
+    public Double getTimestamp() {
         return timestamp;
     }
 
-    public void setTimestamp(Integer timestamp) {
+    public void setTimestamp(Double timestamp) {
         this.timestamp = timestamp;
     }
 
