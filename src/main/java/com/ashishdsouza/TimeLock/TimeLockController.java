@@ -42,15 +42,15 @@ public class TimeLockController {
         }
     }
 
-    @RequestMapping(path = "/checksum/{key}", method = RequestMethod.POST)
-    public String updateChecksum(@PathVariable(name = "key") String key, @RequestParam(name = "checksum") String checksum) {
+    @RequestMapping(path = "/checksum", method = RequestMethod.POST)
+    public String updateChecksum(@RequestParam(name = "key") String key, @RequestParam(name = "checksum") String checksum) {
         if(encryptionInformationRepository.findById(key).isEmpty()) {
             return "Invalid public key";
         }
 
         EncryptionInformation encryptionInformation = encryptionInformationRepository.findById(key).get();
 
-        if(encryptionInformation.getChecksum() == null) {
+        if(encryptionInformation.getChecksum() != null) {
             return "Invalid public key";
         }
 
