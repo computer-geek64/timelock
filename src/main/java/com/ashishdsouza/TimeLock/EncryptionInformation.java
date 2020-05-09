@@ -7,7 +7,6 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "encryption")
 public class EncryptionInformation {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
