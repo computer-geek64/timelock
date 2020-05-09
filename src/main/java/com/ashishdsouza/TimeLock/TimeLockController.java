@@ -4,7 +4,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.NoSuchAlgorithmException;
-import java.util.Base64;
 import java.util.regex.Pattern;
 
 @RestController
@@ -22,11 +21,11 @@ public class TimeLockController {
 
             double timestamp = Double.parseDouble(time);
 
-            RSAEncryption rsa = new RSAEncryption();
+            RSAEncryptionKeys rsaEncryptionKeys = new RSAEncryptionKeys();
 
             EncryptionInformation encryptionInformation = new EncryptionInformation();
-            String base64PublicKey = Base64.getEncoder().encodeToString(rsa.getPublicKey().getEncoded());
-            String base64PrivateKey = Base64.getEncoder().encodeToString(rsa.getPrivateKey().getEncoded());
+            String base64PublicKey = rsaEncryptionKeys.getPublicKeyBase64();
+            String base64PrivateKey = rsaEncryptionKeys.getPrivateKeyBase64();
             encryptionInformation.setPublicKey(base64PublicKey);
             encryptionInformation.setPrivateKey(base64PrivateKey);
             encryptionInformation.setTimestamp(timestamp);

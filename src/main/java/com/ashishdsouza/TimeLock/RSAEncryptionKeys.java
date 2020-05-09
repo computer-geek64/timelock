@@ -1,16 +1,13 @@
 package com.ashishdsouza.TimeLock;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.security.*;
 import java.util.Base64;
 
-public class RSAEncryption {
+public class RSAEncryptionKeys {
     private PrivateKey privateKey;
     private PublicKey publicKey;
 
-    public RSAEncryption() throws NoSuchAlgorithmException {
+    public RSAEncryptionKeys() throws NoSuchAlgorithmException {
         KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance("RSA");
         keyPairGenerator.initialize(1024);
         KeyPair keyPair = keyPairGenerator.generateKeyPair();
@@ -24,5 +21,13 @@ public class RSAEncryption {
 
     public PublicKey getPublicKey() {
         return publicKey;
+    }
+
+    public String getPrivateKeyBase64() {
+        return Base64.getEncoder().encodeToString(privateKey.getEncoded());
+    }
+
+    public String getPublicKeyBase64() {
+        return Base64.getEncoder().encodeToString(publicKey.getEncoded());
     }
 }
