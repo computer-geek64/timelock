@@ -57,4 +57,9 @@ public class TimeLockController {
         encryptionInformationRepository.save(encryptionInformation);
         return "Checksum saved";
     }
+
+    @RequestMapping(path = "/decrypt", method = RequestMethod.GET)
+    public String decrypt(@RequestParam(name = "checksum") String checksum) {
+        return "";
+    }
 }
