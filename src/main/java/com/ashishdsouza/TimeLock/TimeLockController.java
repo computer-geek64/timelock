@@ -62,6 +62,22 @@ public class TimeLockController {
     @RequestMapping(path = "/decrypt", method = RequestMethod.GET)
     public String decrypt(@RequestParam(name = "checksum") String checksum) {
         List<EncryptionInformation> encryptionInformationList = encryptionInformationRepository.findByChecksum(checksum);
-        return "";
+
+        if(encryptionInformationList.isEmpty()) {
+            return "Invalid checksum";
+        }
+
+        double timestamp = (double) System.currentTimeMillis() / 1000;
+
+        for(EncryptionInformation encryptionInformation : encryptionInformationList) {
+            if(timestamp >= encryptionInformation.getTimestamp()) {
+                // Unlock
+                String privateKey = encryptionInformation.getPrivateKey();
+                encryptionInformationRepository.delete(encryptionInformation);
+                return privateKey;
+            }
+        }
+
+        return "Decryption failed";
     }
 }
