@@ -4,8 +4,8 @@ import java.security.*;
 import java.util.Base64;
 
 public class RSAEncryptionKeys {
-    private PrivateKey privateKey;
-    private PublicKey publicKey;
+    private final PrivateKey privateKey;
+    private final PublicKey publicKey;
 
     public RSAEncryptionKeys() throws NoSuchAlgorithmException {
         KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance("RSA");
