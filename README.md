@@ -1,10 +1,10 @@
 # TimeLock
 
-A time-lock encryption program, which relies on a verified time server source to prevent falsified decryption attempts.
+A database-oriented implementation of time-lock encryption, which relies on a secure, verified third party to prevent falsified decryption attempts.
 
 ## What is Time-Lock Encryption?
 
-Time-lock encryption is the concept of ciphertext or an encrypted file that cannot be decrypted until a certain time is reached. Modern cryptographic algorithms are highly sophisticated, yet are made solely with the intent of encryption/decryption with just a static key pair (for asymmetric encryption) or secret key (for symmetric encryption). Unfortunately, these cryptographic algorithms are not time-aware, so for such an implementation to be successful, a secure time-aware third party is needed in this process. The third-party must be virtually impenetrable, with security of the utmost importance. Unfortunately, a major drawback of this time-lock encryption implementation is that the encryption is easily breakable if access to the third-party is obtained, which is not an issue with regular cryptographic algorithms.
+Time-lock encryption is the concept of ciphertext or an encrypted file that cannot be decrypted until a certain time is reached. Modern cryptographic algorithms are highly sophisticated, yet are made solely with the intent of encryption/decryption with just a static key pair (for asymmetric encryption) or secret key (for symmetric encryption). Unfortunately, these cryptographic algorithms are not time-aware, so for such an implementation to be successful, a secure time-aware third party is needed in this process. The third party must be virtually impenetrable, with security of the utmost importance. Unfortunately, a major drawback of this time-lock encryption implementation is that the encryption is easily breakable if access to the third party is obtained, which is not an issue with regular cryptographic algorithms.
 
 ## Cryptographic Keys
 
