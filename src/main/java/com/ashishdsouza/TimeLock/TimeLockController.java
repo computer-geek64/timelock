@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.NoSuchAlgorithmException;
+import java.util.List;
 import java.util.regex.Pattern;
 
 @RestController
@@ -60,6 +61,7 @@ public class TimeLockController {
 
     @RequestMapping(path = "/decrypt", method = RequestMethod.GET)
     public String decrypt(@RequestParam(name = "checksum") String checksum) {
+        List<EncryptionInformation> encryptionInformationList = encryptionInformationRepository.findByChecksum(checksum);
         return "";
     }
 }
