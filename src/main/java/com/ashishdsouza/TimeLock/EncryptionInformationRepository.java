@@ -1,4 +1,7 @@
 package com.ashishdsouza.TimeLock;
 
-public class EncryptionInformationRepository {
+import org.springframework.data.repository.CrudRepository;
+import com.ashishdsouza.TimeLock.EncryptionInformation;
+
+public interface EncryptionInformationRepository extends CrudRepository<EncryptionInformation, String> {
 }
