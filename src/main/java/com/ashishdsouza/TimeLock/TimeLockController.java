@@ -2,6 +2,8 @@ package com.ashishdsouza.TimeLock;
 
 import org.springframework.web.bind.annotation.*;
 
+import java.security.NoSuchAlgorithmException;
+import java.util.Base64;
 import java.util.regex.Pattern;
 
 @RestController
@@ -15,10 +17,16 @@ public class TimeLockController {
             }
 
             double timestamp = Double.parseDouble(time);
-        } catch(NumberFormatException ex) {
+
+            RSAEncryption rsa = new RSAEncryption();
+            return Base64.getEncoder().encodeToString(rsa.getPublicKey().getEncoded());
+        }
+        catch(NumberFormatException ex) {
             return "Invalid timestamp value";
         }
-        return "";
+        catch(NoSuchAlgorithmException ex) {
+            return "No such algorithm";
+        }
     }
 
     @RequestMapping(path = "/checksum/{key}", method = RequestMethod.POST)
