@@ -14,6 +14,24 @@ Symmetric and asymmetric encryption algorithms are both used often in the digita
 
 The chosen encryption algorithm is still under consideration, but it will most likely be asymmetric RSA encryption.
 
+## Database-Oriented Implementation
+
+This basic implementation of time-lock encryption primarily consists of developing the secure, verified third party. The third party consists of an API that is requested during encryption and decryption.
+
+### Encryption Process:
+
+1. Client program sends request to server containing release time
+2. Server generates asymmetric key pair, storing the private key and release time in the database, and returns public key along with a new endpoint for the client program to update the database with new information
+3. Client program encrypts file with the received public key
+4. Client program sends request to new server endpoint containing the checksum of the encrypted file
+5. Server stores the checksum of the encrypted file with the corresponding private key and release time
+
+
+## Software
+
+* Java
+* Spring Boot
+
 ## Developers
 
 * Ashish D'Souza - [computer-geek64](https://github.com/computer-geek64/)
