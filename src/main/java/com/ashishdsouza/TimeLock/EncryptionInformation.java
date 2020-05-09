@@ -6,9 +6,18 @@ import javax.persistence.Id;
 @Entity
 public class EncryptionInformation {
     @Id
+    private String publicKey;
     private String privateKey;
     private Double timestamp;
     private String checksum;
+
+    public String getPublicKey() {
+        return publicKey;
+    }
+
+    public void setPublicKey(String publicKey) {
+        this.publicKey = publicKey;
+    }
 
     public String getPrivateKey() {
         return privateKey;

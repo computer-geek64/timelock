@@ -25,12 +25,14 @@ public class TimeLockController {
             RSAEncryption rsa = new RSAEncryption();
 
             EncryptionInformation encryptionInformation = new EncryptionInformation();
+            String base64PublicKey = Base64.getEncoder().encodeToString(rsa.getPublicKey().getEncoded());
             String base64PrivateKey = Base64.getEncoder().encodeToString(rsa.getPrivateKey().getEncoded());
+            encryptionInformation.setPublicKey(base64PublicKey);
             encryptionInformation.setPrivateKey(base64PrivateKey);
             encryptionInformation.setTimestamp(timestamp);
             encryptionInformationRepository.save(encryptionInformation);
 
-            return Base64.getEncoder().encodeToString(rsa.getPublicKey().getEncoded());
+            return base64PublicKey;
         }
         catch(NumberFormatException ex) {
             return "Invalid timestamp value";
