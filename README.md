@@ -47,11 +47,26 @@ Time-lock encryption still remains a theoretical subject. A virtually impenetrab
 
 ## Documentation
 
-### Prerequisites
+### Install
 
 This project is managed by [Maven](https://maven.apache.org/). You can run the binaries without installing Maven, but it is needed if you want to rebuild the project (or change the default configuration).
 
 The project assumes that [PostgreSQL](https://www.postgresql.org/) is installed and running. The API is configured to run using PostgreSQL, but can be reconfigured to use other database programs (such as MySQL, SQLite, etc.) by editing the `application.properties` file and installing the necessary dependencies.
+
+The default user configuration for the PostgreSQL server is to login with the user `postgres` and password `$3cr3t`. The default database is the `timelock` database. Thus, both the role and database need to be created if they do not already exist. This default configuration can be changed in the `application.properties` file and rebuilding the project binaries (JAR files).
+
+### Deployment
+
+To run the server, run the server JAR file with: `java -jar timelock-server.jar`
+
+Alternatively, use Maven to rebuild the server JAR file with: `mvn clean package`
+
+Maven can also be used to deploy the server from source with: `mvn spring-boot:run`
+
+The client program CLI can be run with: `java -jar timelock.jar`
+
+Documentation for the client program is provided in the program itself. The CLI can be used for encryption with: `timelock encrypt secret.txt 1589145641` The CLI can be used for decryption with: `timelock decrypt secret.txt.enc`
+
 
 ## Developers
 
