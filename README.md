@@ -4,7 +4,7 @@ A database-oriented implementation of time-lock encryption, which relies on a se
 
 ## What is Time-Lock Encryption?
 
-Time-lock encryption is the concept of ciphertext or an encrypted file that cannot be decrypted until a certain time is reached. Modern cryptographic algorithms are highly sophisticated, yet are made solely with the intent of encryption/decryption with just a static key pair (for asymmetric encryption) or secret key (for symmetric encryption). Unfortunately, these cryptographic algorithms are not time-aware, so for such an implementation to be successful, a secure time-aware third party is needed in this process. The third party must be virtually impenetrable, with security of the utmost importance. Unfortunately, a major drawback of this time-lock encryption implementation is that the encryption is easily breakable if access to the third party is obtained, which is not an issue with regular cryptographic algorithms.
+Time-lock encryption is the concept of ciphertext or an encrypted file that cannot be decrypted until a certain time is reached. Modern cryptographic algorithms are highly sophisticated, yet are made solely with the intent of encryption/decryption with only a static key pair (for asymmetric encryption) or secret key (for symmetric encryption). Unfortunately, these cryptographic algorithms are not time-aware, so for such an implementation to be successful, a secure time-aware third party is needed in this process. The third party must be virtually impenetrable, with security of the utmost importance. Unfortunately, a major drawback of this time-lock encryption implementation is that the encryption is easily breakable if access to the third party is obtained, which is not an issue with regular cryptographic algorithms.
 
 ## Cryptographic Keys
 
@@ -16,7 +16,7 @@ TimeLock relies on asymmetric **RSA 1024-bit** encryption. DESCRIBE RSA ENCRYPTI
 
 ## Database-Oriented Implementation
 
-This basic implementation of time-lock encryption primarily consists of developing the secure, verified third party. The third party consists of an API that is requested during encryption and decryption.
+Time-lock encryption still remains a theoretical subject. A virtually impenetrable implementation (not requiring a verified third party) has yet to be designed. Until then, the use of a third party is the closest to true time-lock encryption. This implementation of time-lock encryption relies on a secure database within the third party to secure the necessary information required for decryption. This information includes the public key (stored for initial identification purposes, as well as secure indexing without revealing the private key), private key (necessary for decrypting the time-locked file at the appropriate time), release time (in order to identify when the file is ready for decryption), and the checksum of the encrypted file (used to associate the key pair and release time with the corresponding encrypted file). An API server is then used for protected CRUD operations to the database, which is interfaced by the client CLI program.
 
 ### Encryption Process:
 
