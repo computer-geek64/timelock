@@ -34,7 +34,6 @@ This basic implementation of time-lock encryption primarily consists of developi
 * Java Persistence API (JPA)
 * PostgreSQL
 
-
 ## Developers
 
 * Ashish D'Souza - [computer-geek64](https://github.com/computer-geek64/)
