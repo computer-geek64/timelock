@@ -20,8 +20,8 @@ Time-lock encryption still remains a theoretical subject. A virtually impenetrab
 
 ### Encryption Process:
 
-1. Client program sends request to server containing the release time
-2. Server generates asymmetric key pair, storing the key pair and release time in the database, and returns public key along with a new endpoint for the client program to update the database with new information
+1. The client program makes a POST request to the `/generate` API endpoint, containing the release time in the request body.
+2. The API receives the release time and generates an asymmetric RSA 1024-bit key pair, storing both the key pair and release time in the database, leaving the checksum value as null temporarily., and returns public key along with a new endpoint for the client program to update the database with new information
 3. Client program encrypts file with the received public key
 4. Client program sends request to new server endpoint containing the checksum of the encrypted file
 5. Server stores the checksum of the encrypted file with the corresponding private key and release time
