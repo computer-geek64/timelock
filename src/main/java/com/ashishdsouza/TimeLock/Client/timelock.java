@@ -4,10 +4,7 @@ import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
+import java.io.*;
 import java.net.URI;
 import java.net.URLEncoder;
 import java.net.http.HttpClient;
@@ -38,6 +35,7 @@ public class timelock {
             return keyFactory.generatePublic(new X509EncodedKeySpec(publicKeyBytes));
         }
         catch(NoSuchAlgorithmException | InvalidKeySpecException ex) {
+            ex.printStackTrace();
             return null;
         }
     }
@@ -49,33 +47,36 @@ public class timelock {
             return keyFactory.generatePrivate(new PKCS8EncodedKeySpec(privateKeyBytes));
         }
         catch(NoSuchAlgorithmException | InvalidKeySpecException ex) {
+            ex.printStackTrace();
             return null;
         }
     }
 
-    public static byte[] encryptString(String plaintext, String publicKeyBase64) {
+    private static byte[] encryptString(String plaintext, String publicKeyBase64) {
         try {
             Cipher cipher = Cipher.getInstance("RSA");
             cipher.init(Cipher.ENCRYPT_MODE, base64ToPublicKey(publicKeyBase64));
             return cipher.doFinal(plaintext.getBytes());
         }
         catch(NoSuchPaddingException | NoSuchAlgorithmException | InvalidKeyException | BadPaddingException | IllegalBlockSizeException ex) {
+            ex.printStackTrace();
             return null;
         }
     }
 
-    public static String decryptBytes(byte[] ciphertext, String privateKeyBase64) {
+    private static String decryptBytes(byte[] ciphertext, String privateKeyBase64) {
         try {
             Cipher cipher = Cipher.getInstance("RSA");
             cipher.init(Cipher.DECRYPT_MODE, base64ToPrivateKey(privateKeyBase64));
             return new String(cipher.doFinal(ciphertext));
         }
         catch(NoSuchAlgorithmException | IllegalBlockSizeException | BadPaddingException | NoSuchPaddingException | InvalidKeyException ex) {
+            ex.printStackTrace();
             return null;
         }
     }
 
-    public static String getRequest(String url, HashMap<String, String> values) {
+    private static String getRequest(String url, HashMap<String, String> values) {
         StringBuilder argsStringBuilder = new StringBuilder("?");
 
         for(String key : values.keySet()) {
@@ -95,11 +96,12 @@ public class timelock {
             return httpResponse.body();
         }
         catch(IOException | InterruptedException ex) {
+            ex.printStackTrace();
             return null;
         }
     }
 
-    public static String postRequest(String url, HashMap<String, String> values) {
+    private static String postRequest(String url, HashMap<String, String> values) {
         try {
             StringBuilder requestBodyBuilder = new StringBuilder();
             for(String key : values.keySet()) {
@@ -119,11 +121,41 @@ public class timelock {
             return httpResponse.body();
         }
         catch(IOException | InterruptedException ex) {
+            ex.printStackTrace();
             return null;
         }
     }
 
-    public static String help(String version) {
+    public static String checksum(File file) {
+        try {
+            MessageDigest digest = MessageDigest.getInstance("SHA-256");
+            FileInputStream fileInputStream = new FileInputStream(file);
+
+            byte[] byteArray = new byte[1024];
+            int bytesCount;
+
+            while((bytesCount = fileInputStream.read(byteArray)) != -1) {
+                digest.update(byteArray, 0, bytesCount);
+            }
+
+            fileInputStream.close();
+
+            byte[] bytes = digest.digest();
+
+            StringBuilder stringBuilder = new StringBuilder();
+            for(int i = 0; i < bytes.length; i++) {
+                stringBuilder.append(Integer.toString((bytes[i] & 0xff) + 0x100, 16).substring(1));
+            }
+
+            return stringBuilder.toString();
+        }
+        catch(NoSuchAlgorithmException | IOException ex) {
+            ex.printStackTrace();
+            return null;
+        }
+    }
+
+    private static String help(String version) {
         String stdout = "";
         stdout += "TimeLock v" + version + "\n";
         stdout += "Usage: timelock <encrypt|decrypt> <file> [options]\n\n";
@@ -180,8 +212,9 @@ public class timelock {
                 OutputStream outputStream = new FileOutputStream(new File(file.toPath() + ".enc"));
                 outputStream.write(ciphertext);
                 outputStream.close();
-            } catch (IOException e) {
+            } catch (IOException ex) {
                 System.out.println("Error reading file: " + file.toPath());
+                ex.printStackTrace();
                 return;
             }
         } else if (args[0].equals("decrypt")) {
