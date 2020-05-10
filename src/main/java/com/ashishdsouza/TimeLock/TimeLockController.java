@@ -16,7 +16,7 @@ public class TimeLockController {
     public String generate(@RequestParam(name = "time", defaultValue = "0") String time) {
         // Return public key
         try {
-            if (time.split(Pattern.quote("."))[0].length() < 10) {
+            if(time.split(Pattern.quote("."))[0].length() < 10) {
                 throw new NumberFormatException();
             }
 

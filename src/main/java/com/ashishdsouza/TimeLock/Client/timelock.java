@@ -85,7 +85,7 @@ public class timelock {
 
         try {
             HttpClient httpClient = HttpClient.newHttpClient();
-            HttpRequest httpRequest = HttpRequest.newBuilder().uri(URI.create(URLEncoder.encode(url + args, StandardCharsets.UTF_8))).build();
+            HttpRequest httpRequest = HttpRequest.newBuilder().uri(URI.create(url + args)).build();
 
             HttpResponse<String> httpResponse = httpClient.send(httpRequest, HttpResponse.BodyHandlers.ofString());
             return httpResponse.body();
@@ -150,6 +150,14 @@ public class timelock {
         if (args[0].equals("encrypt")) {
             // Encrypt file
             String file = args[1];
+            double timestamp = (double) System.currentTimeMillis() / 1000 + 120;
+
+            HashMap<String, String> postArgs = new HashMap<>();
+            postArgs.put("time", String.format("%f", timestamp));
+            System.out.println(postArgs);
+
+            String publicKey = postRequest("http://localhost:8080/generate", postArgs);
+            System.out.println(publicKey);
         } else if (args[0].equals("decrypt")) {
             // Decrypt file
             String file = args[1];
