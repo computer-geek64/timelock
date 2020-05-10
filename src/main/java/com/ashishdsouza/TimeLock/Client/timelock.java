@@ -210,6 +210,9 @@ public class timelock {
             try {
                 byte[] fileBytes = Files.readAllBytes(file.toPath());
                 byte[] ciphertext = encryptString(bytesToBase64(fileBytes), publicKeyBase64);
+                if(ciphertext == null) {
+                    throw new IOException();
+                }
                 OutputStream outputStream = new FileOutputStream(encryptedFile);
                 outputStream.write(ciphertext);
                 outputStream.close();
@@ -225,7 +228,9 @@ public class timelock {
             postArgs.put("key", publicKeyBase64);
             postArgs.put("checksum", sha256Checksum);
 
-            if(!postRequest(url + "/checksum", postArgs).equals("Checksum saved")) {
+            String postResponse = postRequest(url + "/checksum", postArgs);
+
+            if(postResponse == null || !postResponse.equals("Checksum saved")) {
                 System.out.println("Error encrypting file");
             }
         } else if (args[0].equals("decrypt")) {
@@ -242,8 +247,8 @@ public class timelock {
             getArgs.put("checksum", sha256Checksum);
 
             String privateKeyBase64 = getRequest(url + "/decrypt", getArgs);
-            if(privateKeyBase64.equals("Decryption failed")) {
-                System.out.println(privateKeyBase64);
+            if(privateKeyBase64 == null || privateKeyBase64.equals("Decryption failed")) {
+                System.out.println("Decryption failed");
             }
 
             File decryptedFile = new File(file.toString().substring(0, file.toString().length() - 4));
