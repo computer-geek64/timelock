@@ -11,7 +11,7 @@ public class RSAEncryptionKeys {
         KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance("RSA");
         keyPairGenerator.initialize(2048);
         KeyPair keyPair = keyPairGenerator.generateKeyPair();
-        privateKey = keyPair.getPrivate();
+        privateKey = keyPair.getPrivate();f
         publicKey = keyPair.getPublic();
     }
 
