@@ -25,9 +25,9 @@ Time-lock encryption still remains a theoretical subject. A virtually impenetrab
 3. The database model then initiates a CREATE operation, storing the key pair (encoded as base 64 in a string) and release time. The checksum field is left as null temporarily.
 4. The API returns a response containing the public key in the response body
 5. The client program receives the public key and uses it to encrypt the specified file.
-6. The client program generates an SHA-256 checksum of the encrypted file and makes another POST request to the `/checksum` API endpoint, containing the checksum of the encrypted file in the request body.
-7. Server stores the checksum of the encrypted file with the corresponding private key and release time
-
+6. The client program generates an SHA-256 checksum of the encrypted file and makes another POST request to the `/checksum` API endpoint, containing the checksum of the encrypted file and the public key (to identify the correct database entry) in the request body.
+7. The API receives the SHA-256 checksum of the encrypted file and public key.
+8. The database model finally initiates an UPDATE operation, storing the checksum (only if the field is null, to prevent future overwriting) in the entry containing the correct public key.
 
 ## Software
 
