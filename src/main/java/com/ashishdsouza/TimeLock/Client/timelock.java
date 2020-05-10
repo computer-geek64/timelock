@@ -9,6 +9,7 @@ import java.security.spec.InvalidKeySpecException;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
 import java.util.Base64;
+import java.util.regex.Pattern;
 
 public class timelock {
     private static String bytesToBase64(byte[] bytes) {
@@ -35,7 +36,8 @@ public class timelock {
             KeyFactory keyFactory = KeyFactory.getInstance("RSA");
             byte[] privateKeyBytes = base64ToBytes(privateKeyBase64);
             return keyFactory.generatePrivate(new PKCS8EncodedKeySpec(privateKeyBytes));
-        } catch (NoSuchAlgorithmException | InvalidKeySpecException ex) {
+        }
+        catch(NoSuchAlgorithmException | InvalidKeySpecException ex) {
             return null;
         }
     }
@@ -45,7 +47,8 @@ public class timelock {
             Cipher cipher = Cipher.getInstance("RSA");
             cipher.init(Cipher.ENCRYPT_MODE, base64ToPublicKey(publicKeyBase64));
             return cipher.doFinal(plaintext.getBytes());
-        } catch (NoSuchPaddingException | NoSuchAlgorithmException | InvalidKeyException | BadPaddingException | IllegalBlockSizeException ex) {
+        }
+        catch(NoSuchPaddingException | NoSuchAlgorithmException | InvalidKeyException | BadPaddingException | IllegalBlockSizeException ex) {
             return null;
         }
     }
@@ -55,11 +58,31 @@ public class timelock {
             Cipher cipher = Cipher.getInstance("RSA");
             cipher.init(Cipher.DECRYPT_MODE, base64ToPrivateKey(privateKeyBase64));
             return new String(cipher.doFinal(ciphertext));
-        } catch (NoSuchAlgorithmException | IllegalBlockSizeException | BadPaddingException | NoSuchPaddingException | InvalidKeyException ex) {
+        }
+        catch(NoSuchAlgorithmException | IllegalBlockSizeException | BadPaddingException | NoSuchPaddingException | InvalidKeyException ex) {
             return null;
         }
     }
 
     public static void main(String[] args) {
+        if(args.length == 0) {
+            // Help
+            args = new String[]{"--help"};
+        }
+
+        if(args.length == 1) {
+            switch(args[0]) {
+                case "-h":
+                case "--help":
+                    // Display help
+                    System.out.println("Help");
+                    break;
+                case "-v":
+                case "--version":
+                    // Display version info
+                    System.out.println("timelock v1.0.0");
+                    break;
+            }
+        }
     }
 }
