@@ -74,7 +74,7 @@ Documentation for the client program is provided in the program itself. The CLI 
 
 ## Releases
 
-The current stable release for **TimeLock** is [v1.0.0](/releases/tag/v1.0.0)
+The current stable release for **TimeLock** is [v1.0.0](https://github.com/computer-geek64/timelock/releases/latest)
 
 ## Versioning
 
