@@ -21,16 +21,21 @@ Time-lock encryption still remains a theoretical subject. A virtually impenetrab
 ### Encryption Process:
 
 1. The client program makes a `POST` request to the `/generate` API endpoint, containing the release time as a timestamp in the request body.
-2. The API receives the release time and generates an asymmetric RSA 1024-bit key pair.
+2. The API receives the release time and generates an asymmetric **RSA 1024-bit** key pair.
 3. The database model then initiates a `CREATE` operation, storing the key pair (encoded as base 64 in a string) and release time. The checksum field is left as null temporarily.
 4. The API returns a response containing the public key in the response body
 5. The client program receives the public key and uses it to encrypt the specified file.
-6. The client program generates an SHA-256 checksum of the encrypted file and makes another `POST` request to the `/checksum` API endpoint, containing the checksum of the encrypted file and the public key (to identify the correct database entry) in the request body.
-7. The API receives the `SHA-256` checksum of the encrypted file and public key.
+6. The client program generates an **SHA-256** checksum of the encrypted file and makes another `POST` request to the `/checksum` API endpoint, containing the checksum of the encrypted file and the public key (to identify the correct database entry) in the request body.
+7. The API receives the **SHA-256** checksum of the encrypted file and public key.
 8. The database model finally initiates an `UPDATE` operation, storing the checksum (only if the field is null, to prevent future overwriting) in the entry containing the correct public key.
 
 ### Decryption Process:
-1. The client program makes a `GET` request to the `/decrypt` API endpoint, containing an `SHA-256` checksum of the encrypted file in the request URL.
+1. The client program makes a `GET` request to the `/decrypt` API endpoint, containing an **SHA-256** checksum of the encrypted file in the request URL.
+2. The API receives the checksum and initiates a `READ` operation to find the corresponding entry in the database.
+3. If the entry does not exist, or if the release time has not yet been reached, then the API returns a response containing an invalid message. This prevents a brute force attack from identifying potential files to decrypt.
+4. If the entry does exist, the API returns a response containing the private key in the response body.
+5. The database model then initiates a `DELETE` operation to eliminate the entry from the database, in order to optimize space.
+6. The client program receives the private key and uses it to decrypt the specified file.
 
 ## Software
 
