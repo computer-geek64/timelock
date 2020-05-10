@@ -167,7 +167,7 @@ public class timelock {
 
     public static void main(String[] args) {
         String version = "1.0.0";
-        String url = "http://localhost:8080"
+        String url = "http://localhost:8080";
 
         if (args.length == 0) {
             // Help
@@ -221,11 +221,11 @@ public class timelock {
 
             String sha256Checksum = checksum(encryptedFile);
 
-            HashMap<String, String> getArgs = new HashMap<>();
-            getArgs.put("key", publicKeyBase64);
-            getArgs.put("checksum", sha256Checksum);
+            postArgs = new HashMap<>();
+            postArgs.put("key", publicKeyBase64);
+            postArgs.put("checksum", sha256Checksum);
 
-            System.out.print(getRequest(url + "/checksum", getArgs));
+            System.out.print(postRequest(url + "/checksum", postArgs));
         } else if (args[0].equals("decrypt")) {
             // Decrypt file
             File file = new File(args[1]);
@@ -233,6 +233,8 @@ public class timelock {
                 System.out.println("Invalid file");
                 return;
             }
+
+
 
             return;
         } else {
