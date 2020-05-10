@@ -8,9 +8,11 @@ import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 import java.io.IOException;
 import java.net.URI;
+import java.net.URLEncoder;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.nio.charset.StandardCharsets;
 import java.security.*;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.PKCS8EncodedKeySpec;
@@ -72,10 +74,19 @@ public class timelock {
     }
 
     public static String getRequest(String url, HashMap<String, String> values) {
-        HttpClient httpClient = HttpClient.newHttpClient();
-        HttpRequest httpRequest = HttpRequest.newBuilder().uri(URI.create(url)).build();
+        StringBuilder argsStringBuilder = new StringBuilder("?");
+
+        for(String key : values.keySet()) {
+            argsStringBuilder.append(key).append("=").append(values.get(key)).append("&");
+        }
+
+        String args = argsStringBuilder.toString();
+        args = args.substring(0, args.length() - 1);
 
         try {
+            HttpClient httpClient = HttpClient.newHttpClient();
+            HttpRequest httpRequest = HttpRequest.newBuilder().uri(URI.create(URLEncoder.encode(url + args, StandardCharsets.UTF_8))).build();
+
             HttpResponse<String> httpResponse = httpClient.send(httpRequest, HttpResponse.BodyHandlers.ofString());
             return httpResponse.body();
         }
@@ -91,8 +102,8 @@ public class timelock {
 
             HttpClient httpClient = HttpClient.newHttpClient();
             HttpRequest httpRequest = HttpRequest.newBuilder().uri(URI.create(url)).POST(HttpRequest.BodyPublishers.ofString(requestBody)).build();
-            HttpResponse<String> httpResponse = httpClient.send(httpRequest, HttpResponse.BodyHandlers.ofString());
 
+            HttpResponse<String> httpResponse = httpClient.send(httpRequest, HttpResponse.BodyHandlers.ofString());
             return httpResponse.body();
         }
         catch(IOException | InterruptedException ex) {
