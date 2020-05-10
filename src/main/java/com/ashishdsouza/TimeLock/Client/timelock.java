@@ -186,7 +186,13 @@ public class timelock {
             }
         } else if (args[0].equals("decrypt")) {
             // Decrypt file
-            String file = args[1];
+            File file = new File(args[1]);
+            if(!file.exists() || file.isDirectory()) {
+                System.out.println("Invalid file");
+                return;
+            }
+
+            return;
         } else {
             System.out.println(help(version));
         }
