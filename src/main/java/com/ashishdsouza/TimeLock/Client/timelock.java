@@ -4,6 +4,11 @@ import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
+import java.io.IOException;
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
 import java.security.*;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.PKCS8EncodedKeySpec;
@@ -64,13 +69,23 @@ public class timelock {
         }
     }
 
+    public static String httpRequest(String url) {
+        HttpClient httpClient = HttpClient.newHttpClient();
+        HttpRequest httpRequest = HttpRequest.newBuilder().uri(URI.create(url)).build();
+
+        try {
+            HttpResponse<String> httpResponse = httpClient.send(httpRequest, HttpResponse.BodyHandlers.ofString());
+            return httpResponse.body();
+        }
+        catch(IOException | InterruptedException ex) {
+            return null;
+        }
+    }
+
     public static String help(String version) {
         String stdout = "";
         stdout += "TimeLock v" + version + "\n";
-        stdout += "Usage: timelock <action> <file> [options]\n\n";
-        stdout += "Action\tDescription";
-        stdout += "encrypt\tEncrypt a file\n";
-        stdout += "decrypt\tDecrypt a file\n\n";
+        stdout += "Usage: timelock <encrypt|decrypt> <file> [options]\n\n";
         stdout += "Option\tLong Option\tDescription\n";
         stdout += "-h\t--help\tShow this help screen\n";
         stdout += "-v\t--version\tShow program version information\n";
@@ -79,26 +94,23 @@ public class timelock {
 
     public static void main(String[] args) {
         String version = "1.0.0";
-        if(args.length == 0) {
+        if (args.length == 0) {
             // Help
             System.out.println(help(version));
             return;
         }
 
-
-
-        if(args.length == 1) {
-            if(args[0].replaceAll(Pattern.quote("-"), "").equals("v"))
-            switch(args[0]) {
+        if (args.length == 1) {
+            switch (args[0]) {
                 case "-v":
                 case "--version":
                     // Display version info
-                    System.out.println("timelock v1.0.0");
+                    System.out.println("TimeLock v" + version);
                     break;
                 default:
                     System.out.println("Unknown action: " + args[0]);
-                case "h":
-                case "help":
+                case "-h":
+                case "--help":
                     // Display help
                     System.out.println(help(version));
                     break;
@@ -106,13 +118,13 @@ public class timelock {
             return;
         }
 
-        if(args[0].equals("encrypt")) {
+        if (args[0].equals("encrypt")) {
             // Encrypt file
-        }
-        else if(args[0].equals("decrypt")) {
+            String file = args[1];
+        } else if (args[0].equals("decrypt")) {
             // Decrypt file
-        }
-        else {
+            String file = args[1];
+        } else {
             System.out.println(help(version));
             return;
         }
