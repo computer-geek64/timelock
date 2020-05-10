@@ -39,10 +39,19 @@ Time-lock encryption still remains a theoretical subject. A virtually impenetrab
 
 ## Software
 
-* Java SE 11
-* Spring Boot
-* Java Persistence API (JPA)
-* PostgreSQL
+* [Java SE 11](https://www.oracle.com/java/technologies/javase-jdk11-downloads.html)
+* [Spring Boot](https://spring.io/projects/spring-boot)
+* [Maven](https://maven.apache.org/)
+* [Java Persistence API (JPA)](https://www.oracle.com/java/technologies/persistence-jsp.html)
+* [PostgreSQL](https://www.postgresql.org/)
+
+## Documentation
+
+### Prerequisites
+
+This project is managed by [Maven](https://maven.apache.org/). You can run the binaries without installing Maven, but it is needed if you want to rebuild the project (or change the default configuration).
+
+The project assumes that [PostgreSQL](https://www.postgresql.org/) is installed and running. The API is configured to run using PostgreSQL, but can be reconfigured to use other database programs (such as MySQL, SQLite, etc.) by editing the `application.properties` file and installing the necessary dependencies.
 
 ## Developers
 
