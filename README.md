@@ -29,8 +29,11 @@ This basic implementation of time-lock encryption primarily consists of developi
 
 ## Software
 
-* Java
+* Java SE 11
 * Spring Boot
+* Java Persistence API (JPA)
+* PostgreSQL
+
 
 ## Developers
 
