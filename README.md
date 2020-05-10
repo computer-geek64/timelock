@@ -12,7 +12,7 @@ Symmetric and asymmetric encryption algorithms are both often used in the digita
 
 ## Encryption Algorithm
 
-TimeLock relies on asymmetric **RSA 1024-bit** encryption. DESCRIBE RSA ENCRYPTION. By using an asymmetric encryption algorithm, the encryption and decryption process can be separated into a public and private key pair. This way, the client program can communicate with the server to encrypt files securely, requiring only the public key, so that the private key is never exposed (preventing the encrypted file from being decrypted prematurely). On the other hand, if a symmetric encryption algorithm were chosen, then the secret key would be exposed during the encryption process. Combined with an intercepting proxy, the key could be extracted to prematurely decrypt the file, rendering the program obsolete.
+TimeLock relies on asymmetric **RSA 2048-bit** encryption. RSA (Rivest–Shamir–Adleman) is the first encryption algorithm in public-key cryptography. It was invented as a secure alternative to symmetric encryption for effective communication. **RSA 2048-bit** encryption was chosen because it offers the optimal tradeoff between security and memory. **RSA 512-bit** encryption is the most memory-efficient option, but it was considered "broken" in 1999 in under 6 months. **RSA 1024-bit** is still considered relatively secure, but for highly sensitive information and long-term storage, it is not secure enough. Thus, **RSA 2048-bit** is best choice for this case. Furthermore, by using an asymmetric encryption algorithm, the encryption and decryption process can be separated into a public and private key pair. This way, the client program can communicate with the server to encrypt files securely, requiring only the public key, so that the private key is never exposed (preventing the encrypted file from being decrypted prematurely). On the other hand, if a symmetric encryption algorithm were chosen, then the secret key would be exposed during the encryption process. Combined with an intercepting proxy, the key could be extracted to prematurely decrypt the file, rendering the program obsolete.
 
 ## Database-Oriented Implementation
 
@@ -21,7 +21,7 @@ Time-lock encryption still remains a theoretical subject. A virtually impenetrab
 ### Encryption Process:
 
 1. The client program makes a `POST` request to the `/generate` API endpoint, containing the release time as a timestamp in the request body.
-2. The API receives the release time and generates an asymmetric **RSA 1024-bit** key pair.
+2. The API receives the release time and generates an asymmetric **RSA 2048-bit** key pair.
 3. The database model then initiates a `CREATE` operation, storing the key pair (encoded as base 64 in a string) and release time. The checksum field is left as null temporarily.
 4. The API returns a response containing the public key in the response body
 5. The client program receives the public key and uses it to encrypt the specified file.
