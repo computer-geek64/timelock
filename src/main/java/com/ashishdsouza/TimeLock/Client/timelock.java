@@ -67,10 +67,13 @@ public class timelock {
     public static String help(String version) {
         String stdout = "";
         stdout += "TimeLock v" + version + "\n";
-        stdout += "Usage: timelock [action] [options]\n\n";
-        stdout += "Option\t\tLong Option\tDescription\n";
-        stdout += "-h\t\t--help\tShow this help screen\n";
-        stdout += "-v\t\t--version\tShow program version information\n";
+        stdout += "Usage: timelock <action> <file> [options]\n\n";
+        stdout += "Action\tDescription";
+        stdout += "encrypt\tEncrypt a file\n";
+        stdout += "decrypt\tDecrypt a file\n\n";
+        stdout += "Option\tLong Option\tDescription\n";
+        stdout += "-h\t--help\tShow this help screen\n";
+        stdout += "-v\t--version\tShow program version information\n";
         return stdout;
     }
 
@@ -82,7 +85,10 @@ public class timelock {
             return;
         }
 
+
+
         if(args.length == 1) {
+            if(args[0].replaceAll(Pattern.quote("-"), "").equals("v"))
             switch(args[0]) {
                 case "-v":
                 case "--version":
@@ -90,6 +96,9 @@ public class timelock {
                     System.out.println("timelock v1.0.0");
                     break;
                 default:
+                    System.out.println("Unknown action: " + args[0]);
+                case "h":
+                case "help":
                     // Display help
                     System.out.println(help(version));
                     break;
