@@ -158,7 +158,8 @@ public class timelock {
     private static String help(String version) {
         String stdout = "";
         stdout += "TimeLock v" + version + "\n";
-        stdout += "Usage: timelock <encrypt|decrypt> <file> <timestamp> [options]\n\n";
+        stdout += "Usage:\ttimelock encrypt <file> <timestamp> [options]\n";
+        stdout += "\ttimelock decrypt <file> [options]\n\n";
         stdout += "Option\tLong Option\tDescription\n";
         stdout += "-h\t--help\t\tShow this help screen\n";
         stdout += "-v\t--version\tShow program version information\n";
