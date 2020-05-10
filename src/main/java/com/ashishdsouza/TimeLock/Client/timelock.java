@@ -1,5 +1,7 @@
 package com.ashishdsouza.TimeLock.Client;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
@@ -14,7 +16,7 @@ import java.security.spec.InvalidKeySpecException;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
 import java.util.Base64;
-import java.util.regex.Pattern;
+import java.util.HashMap;
 
 public class timelock {
     private static String bytesToBase64(byte[] bytes) {
@@ -69,12 +71,28 @@ public class timelock {
         }
     }
 
-    public static String httpRequest(String url) {
+    public static String getRequest(String url, HashMap<String, String> values) {
         HttpClient httpClient = HttpClient.newHttpClient();
         HttpRequest httpRequest = HttpRequest.newBuilder().uri(URI.create(url)).build();
 
         try {
             HttpResponse<String> httpResponse = httpClient.send(httpRequest, HttpResponse.BodyHandlers.ofString());
+            return httpResponse.body();
+        }
+        catch(IOException | InterruptedException ex) {
+            return null;
+        }
+    }
+
+    public static String postRequest(String url, HashMap<String, String> values) {
+        try {
+            ObjectMapper objectMapper = new ObjectMapper();
+            String requestBody = objectMapper.writeValueAsString(values);
+
+            HttpClient httpClient = HttpClient.newHttpClient();
+            HttpRequest httpRequest = HttpRequest.newBuilder().uri(URI.create(url)).POST(HttpRequest.BodyPublishers.ofString(requestBody)).build();
+            HttpResponse<String> httpResponse = httpClient.send(httpRequest, HttpResponse.BodyHandlers.ofString());
+
             return httpResponse.body();
         }
         catch(IOException | InterruptedException ex) {
