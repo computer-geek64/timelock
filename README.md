@@ -12,7 +12,7 @@ Symmetric and asymmetric encryption algorithms are both often used in the digita
 
 ## Encryption Algorithm
 
-TimeLock relies on asymmetric **RSA 1024-bit** encryption. DESCRIBE RSA ENCRYPTION. By using an asymmetric encryption algorithm, the encryption and decryption process can be separated into a public and private key pair. This way, the client program can communicate with the server to encrypt files securely, requiring only the public key, so that the private key is never exposed (preventing the encrypted file from being decrypted prematurely). On the other hand, if a symmetric encryption algorithm were chosen, then the secret key would be exposed during the encryption process. Combined with an intercepting proxy, the key could be extracted to prematurely decrypt the file, rendering the program obsolete.
+TimeLock relies on asymmetric **RSA 2048-bit** encryption. RSA (Rivest–Shamir–Adleman) is the first encryption algorithm in public-key cryptography. It was invented as a secure alternative to symmetric encryption for effective communication. **RSA 2048-bit** encryption was chosen because it offers the optimal tradeoff between security and memory. **RSA 512-bit** encryption is the most memory-efficient option, but it was considered "broken" in 1999 in under 6 months. **RSA 1024-bit** is still considered relatively secure, but for highly sensitive information and long-term storage, it is not secure enough. Thus, **RSA 2048-bit** is best choice for this case. Furthermore, by using an asymmetric encryption algorithm, the encryption and decryption process can be separated into a public and private key pair. This way, the client program can communicate with the server to encrypt files securely, requiring only the public key, so that the private key is never exposed (preventing the encrypted file from being decrypted prematurely). On the other hand, if a symmetric encryption algorithm were chosen, then the secret key would be exposed during the encryption process. Combined with an intercepting proxy, the key could be extracted to prematurely decrypt the file, rendering the program obsolete.
 
 ## Database-Oriented Implementation
 
@@ -21,7 +21,7 @@ Time-lock encryption still remains a theoretical subject. A virtually impenetrab
 ### Encryption Process:
 
 1. The client program makes a `POST` request to the `/generate` API endpoint, containing the release time as a timestamp in the request body.
-2. The API receives the release time and generates an asymmetric **RSA 1024-bit** key pair.
+2. The API receives the release time and generates an asymmetric **RSA 2048-bit** key pair.
 3. The database model then initiates a `CREATE` operation, storing the key pair (encoded as base 64 in a string) and release time. The checksum field is left as null temporarily.
 4. The API returns a response containing the public key in the response body
 5. The client program receives the public key and uses it to encrypt the specified file.
@@ -39,10 +39,34 @@ Time-lock encryption still remains a theoretical subject. A virtually impenetrab
 
 ## Software
 
-* Java SE 11
-* Spring Boot
-* Java Persistence API (JPA)
-* PostgreSQL
+* [Java SE 11](https://www.oracle.com/java/technologies/javase-jdk11-downloads.html)
+* [Spring Boot](https://spring.io/projects/spring-boot)
+* [Maven](https://maven.apache.org/)
+* [Java Persistence API (JPA)](https://www.oracle.com/java/technologies/persistence-jsp.html)
+* [PostgreSQL](https://www.postgresql.org/)
+
+## Documentation
+
+### Install
+
+This project is managed by [Maven](https://maven.apache.org/). You can run the binaries without installing Maven, but it is needed if you want to rebuild the project (or change the default configuration).
+
+The project assumes that [PostgreSQL](https://www.postgresql.org/) is installed and running. The API is configured to run using PostgreSQL, but can be reconfigured to use other database programs (such as MySQL, SQLite, etc.) by editing the `application.properties` file and installing the necessary dependencies.
+
+The default user configuration for the PostgreSQL server is to login with the user `postgres` and password `$3cr3t`. The default database is the `timelock` database. Thus, both the role and database need to be created if they do not already exist. This default configuration can be changed in the `application.properties` file and rebuilding the project binaries (JAR files).
+
+### Deployment
+
+To run the server, run the server JAR file with: `java -jar timelock-server.jar`
+
+Alternatively, use Maven to rebuild the server JAR file with: `mvn clean package`
+
+Maven can also be used to deploy the server from source with: `mvn spring-boot:run`
+
+The client program CLI can be run with: `java -jar timelock.jar`
+
+Documentation for the client program is provided in the program itself. The CLI can be used for encryption with: `timelock encrypt secret.txt 1589145641` The CLI can be used for decryption with: `timelock decrypt secret.txt.enc`
+
 
 ## Developers
 
