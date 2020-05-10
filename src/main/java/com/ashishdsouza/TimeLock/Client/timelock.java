@@ -64,25 +64,48 @@ public class timelock {
         }
     }
 
+    public static String help(String version) {
+        String stdout = "";
+        stdout += "TimeLock v" + version + "\n";
+        stdout += "Usage: timelock [action] [options]\n\n";
+        stdout += "Option\t\tLong Option\tDescription\n";
+        stdout += "-h\t\t--help\tShow this help screen\n";
+        stdout += "-v\t\t--version\tShow program version information\n";
+        return stdout;
+    }
+
     public static void main(String[] args) {
+        String version = "1.0.0";
         if(args.length == 0) {
             // Help
-            args = new String[]{"--help"};
+            System.out.println(help(version));
+            return;
         }
 
         if(args.length == 1) {
             switch(args[0]) {
-                case "-h":
-                case "--help":
-                    // Display help
-                    System.out.println("Help");
-                    break;
                 case "-v":
                 case "--version":
                     // Display version info
                     System.out.println("timelock v1.0.0");
                     break;
+                default:
+                    // Display help
+                    System.out.println(help(version));
+                    break;
             }
+            return;
+        }
+
+        if(args[0].equals("encrypt")) {
+            // Encrypt file
+        }
+        else if(args[0].equals("decrypt")) {
+            // Decrypt file
+        }
+        else {
+            System.out.println(help(version));
+            return;
         }
     }
 }
