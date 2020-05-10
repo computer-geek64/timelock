@@ -160,7 +160,7 @@ public class timelock {
         stdout += "TimeLock v" + version + "\n";
         stdout += "Usage: timelock <encrypt|decrypt> <file> <timestamp> [options]\n\n";
         stdout += "Option\tLong Option\tDescription\n";
-        stdout += "-h\t--help\tShow this help screen\n";
+        stdout += "-h\t--help\t\tShow this help screen\n";
         stdout += "-v\t--version\tShow program version information\n";
         return stdout;
     }
