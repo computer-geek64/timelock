@@ -80,7 +80,7 @@ public class timelock {
         StringBuilder argsStringBuilder = new StringBuilder("?");
 
         for(String key : values.keySet()) {
-            argsStringBuilder.append(key).append("=").append(values.get(key)).append("&");
+            argsStringBuilder.append(URLEncoder.encode(key, StandardCharsets.UTF_8)).append("=").append(URLEncoder.encode(values.get(key), StandardCharsets.UTF_8)).append("&");
         }
 
         String args = argsStringBuilder.toString();
@@ -126,7 +126,7 @@ public class timelock {
         }
     }
 
-    public static String checksum(File file) {
+    private static String checksum(File file) {
         try {
             MessageDigest digest = MessageDigest.getInstance("SHA-256");
             FileInputStream fileInputStream = new FileInputStream(file);
@@ -158,7 +158,7 @@ public class timelock {
     private static String help(String version) {
         String stdout = "";
         stdout += "TimeLock v" + version + "\n";
-        stdout += "Usage: timelock <encrypt|decrypt> <file> [options]\n\n";
+        stdout += "Usage: timelock <encrypt|decrypt> <file> <timestamp> [options]\n\n";
         stdout += "Option\tLong Option\tDescription\n";
         stdout += "-h\t--help\tShow this help screen\n";
         stdout += "-v\t--version\tShow program version information\n";
@@ -167,6 +167,8 @@ public class timelock {
 
     public static void main(String[] args) {
         String version = "1.0.0";
+        String url = "http://localhost:8080"
+
         if (args.length == 0) {
             // Help
             System.out.println(help(version));
@@ -190,7 +192,6 @@ public class timelock {
             }
             return;
         }
-
         if (args[0].equals("encrypt")) {
             // Encrypt file
             File file = new File(args[1]);
@@ -199,17 +200,17 @@ public class timelock {
                 return;
             }
 
-            double timestamp = (double) System.currentTimeMillis() / 1000 + 120;
-
             HashMap<String, String> postArgs = new HashMap<>();
-            postArgs.put("time", String.format("%f", timestamp));
+            postArgs.put("time", args[2]);
 
-            String publicKeyBase64 = postRequest("http://localhost:8080/generate", postArgs);
+            String publicKeyBase64 = postRequest(url + "/generate", postArgs);
+
+            File encryptedFile = new File(file.toPath() + ".enc");
 
             try {
                 byte[] fileBytes = Files.readAllBytes(file.toPath());
                 byte[] ciphertext = encryptString(bytesToBase64(fileBytes), publicKeyBase64);
-                OutputStream outputStream = new FileOutputStream(new File(file.toPath() + ".enc"));
+                OutputStream outputStream = new FileOutputStream(encryptedFile);
                 outputStream.write(ciphertext);
                 outputStream.close();
             } catch (IOException ex) {
@@ -217,6 +218,14 @@ public class timelock {
                 ex.printStackTrace();
                 return;
             }
+
+            String sha256Checksum = checksum(encryptedFile);
+
+            HashMap<String, String> getArgs = new HashMap<>();
+            getArgs.put("key", publicKeyBase64);
+            getArgs.put("checksum", sha256Checksum);
+
+            System.out.print(getRequest(url + "/checksum", getArgs));
         } else if (args[0].equals("decrypt")) {
             // Decrypt file
             File file = new File(args[1]);
@@ -229,5 +238,6 @@ public class timelock {
         } else {
             System.out.println(help(version));
         }
+
     }
 }
