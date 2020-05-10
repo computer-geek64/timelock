@@ -126,7 +126,6 @@ public class timelock {
             String file = args[1];
         } else {
             System.out.println(help(version));
-            return;
         }
     }
 }
