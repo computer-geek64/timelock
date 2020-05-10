@@ -205,7 +205,7 @@ public class timelock {
 
             String publicKeyBase64 = postRequest(url + "/generate", postArgs);
 
-            File encryptedFile = new File(file.toPath() + ".enc");
+            File encryptedFile = new File(file.toString() + ".enc");
 
             try {
                 byte[] fileBytes = Files.readAllBytes(file.toPath());
@@ -214,7 +214,7 @@ public class timelock {
                 outputStream.write(ciphertext);
                 outputStream.close();
             } catch (IOException ex) {
-                System.out.println("Error reading file: " + file.toPath());
+                System.out.println("Error reading file: " + file.toString());
                 ex.printStackTrace();
                 return;
             }
@@ -225,7 +225,9 @@ public class timelock {
             postArgs.put("key", publicKeyBase64);
             postArgs.put("checksum", sha256Checksum);
 
-            System.out.print(postRequest(url + "/checksum", postArgs));
+            if(!postRequest(url + "/checksum", postArgs).equals("Checksum saved")) {
+                System.out.println("Error encrypting file");
+            }
         } else if (args[0].equals("decrypt")) {
             // Decrypt file
             File file = new File(args[1]);
@@ -234,9 +236,30 @@ public class timelock {
                 return;
             }
 
+            String sha256Checksum = checksum(file);
 
+            HashMap<String, String> getArgs = new HashMap<>();
+            getArgs.put("checksum", sha256Checksum);
 
-            return;
+            String privateKeyBase64 = getRequest(url + "/decrypt", getArgs);
+            if(privateKeyBase64.equals("Decryption failed")) {
+                System.out.println(privateKeyBase64);
+            }
+
+            File decryptedFile = new File(file.toString().substring(0, file.toString().length() - 4));
+
+            try {
+                byte[] ciphertext = Files.readAllBytes(file.toPath());
+                byte[] fileBytes = base64ToBytes(decryptBytes(ciphertext, privateKeyBase64));
+                OutputStream outputStream = new FileOutputStream(decryptedFile);
+                outputStream.write(ciphertext);
+                outputStream.close();
+            }
+            catch(IOException ex) {
+                System.out.println("Error reading file: " + file.toPath());
+                ex.printStackTrace();
+                return;
+            }
         } else {
             System.out.println(help(version));
         }
